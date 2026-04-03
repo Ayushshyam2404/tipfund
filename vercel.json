@@ -1,6 +1,10 @@
 {
-  "buildCommand": "next build",
+  "buildCommand": "npm install &&prisma generate && next build",
   "devCommand": "next dev",
   "installCommand": "npm ci",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "nodejs": "20.x",
+  "env": {
+    "SKIP_ENV_VALIDATION": "1"
+  }
 }
