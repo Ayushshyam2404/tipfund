@@ -1,0 +1,11 @@
+__tests__
+.env.local
+.env.example
+jest.config.ts
+jest.setup.ts
+DEPLOYMENT.md
+PRODUCTION_CHECKLIST.md
+TESTING.md
+QUICK_REFERENCE.md
+AGENTS.md
+CLAUDE.md
