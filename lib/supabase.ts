@@ -4,11 +4,20 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
+// Create placeholder clients if env vars are missing (for build time)
+const createSafeClient = (url: string, key: string) => {
+  if (!url || !key) {
+    // Return dummy client for build time
+    return createClient("https://placeholder.supabase.co", "placeholder-key");
+  }
+  return createClient(url, key);
+};
+
 // Client-side Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createSafeClient(supabaseUrl, supabaseAnonKey);
 
 // Server-side Supabase client with service role (for admin operations)
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey);
+export const supabaseAdmin = createSafeClient(supabaseUrl, supabaseServiceRoleKey);
 
 // Auth helper functions
 export async function signUpWithEmail(email: string, password: string) {
