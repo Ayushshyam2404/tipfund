@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String    @id @default(uuid())
+  email           String    @unique
+  githubUsername  String?   @unique
+  avatarUrl       String?
+  roles           Role[]
+  stripeAccountId String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  projects  Project[]
+  fundings  Funding[]
+  bids      Bid[]
+  
+  @@index([email])
+  @@index([githubUsername])
+}
+
+enum Role {
+  OWNER
+  FUNDER
+  BIDDER
+}
+
+model UserRole {
+  id     String @id @default(uuid())
+  userId String
+  role   Role
+  
+  @@unique([userId, role])
+}
+
+model Project {
+  id            String    @id @default(uuid())
+  ownerId       String
+  owner         User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  
+  githubRepoUrl String
+  title         String
+  description   String    @db.Text
+  techStack     String[]  // JSON array of tech tags
+  
+  stars         Int       @default(0)
+  forks         Int       @default(0)
+  language      String?
+  
+  fundingGoal   Float
+  totalFunded   Float     @default(0)
+  
+  status        ProjectStatus @default(OPEN)
+  deadline      DateTime?
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  fundings  Funding[]
+  bids      Bid[]
+  
+  @@index([ownerId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum ProjectStatus {
+  OPEN       // Accepting funding and bids
+  FUNDED     // Reached funding goal
+  CLOSED     // Funding period ended, not funded
+}
+
+enum BidPrediction {
+  YES
+  NO
+}
+
+model Funding {
+  id          String   @id @default(uuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  funderId    String
+  funder      User     @relation(fields: [funderId], references: [id], onDelete: Cascade)
+  
+  amount      Float           // Gross amount
+  netAmount   Float           // After 10% platform fee
+  platformFee Float           // 10% of amount
+  
+  tip         Boolean  @default(false)
+  status      String   @default("pending") // pending, completed, refunded
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([projectId])
+  @@index([funderId])
+  @@index([createdAt])
+}
+
+model Bid {
+  id          String    @id @default(uuid())
+  projectId   String
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  bidderId    String
+  bidder      User      @relation(fields: [bidderId], references: [id], onDelete: Cascade)
+  
+  amount      Float              // Amount wagered
+  riskPercent Float              // e.g., 30 means bidder wants 30% return
+  prediction  BidPrediction      // YES = will fund, NO = won't fund
+  
+  status      String    @default("active")  // active, won, lost, pending-settlement
+  settled     Boolean   @default(false)
+  outcome     String?            // won, lost, null if not settled
+  payout      Float?             // Calculated payout or null if not settled/lost
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  @@index([projectId])
+  @@index([bidderId])
+  @@index([status])
+  @@index([createdAt])
+}

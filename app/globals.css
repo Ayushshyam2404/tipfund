@@ -1,26 +1,478 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap");
+
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Neo-Brutalist Colors */
+  --bg: #f5f0e8;
+  --fg: #0a0a0a;
+  --accent-yellow: #ffe500;
+  --accent-red: #ff2d2d;
+  --accent-blue: #0047ff;
+  --accent-lime: #aaff00;
+  --border: #0a0a0a;
+  --shadow: #0a0a0a;
+
+  /* Font Variables */
+  --font-space-grotesk: "Space Grotesk", sans-serif;
+  --font-ibm-plex: "IBM Plex Mono", monospace;
+  --font-arial-black: "Arial Black", sans-serif;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --font-sans: var(--font-space-grotesk);
+  --font-mono: var(--font-ibm-plex);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-space-grotesk);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Neo-Brutalist Card Base */
+.brutal-card {
+  border: 3px solid var(--fg);
+  box-shadow: 6px 6px 0px var(--shadow);
+  background: var(--bg);
+}
+
+.brutal-card:hover {
+  box-shadow: 8px 8px 0px var(--accent-yellow);
+  transform: translate(-2px, -2px);
+  transition: all 0.2s ease;
+}
+
+/* Neo-Brutalist Button */
+.brutal-button {
+  background: var(--fg);
+  color: white;
+  border: 3px solid var(--fg);
+  padding: 12px 24px;
+  font-family: var(--font-arial-black);
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.brutal-button:hover {
+  background: var(--accent-yellow);
+  color: var(--fg);
+  box-shadow: 4px 4px 0px var(--fg);
+  transform: translate(-2px, -2px);
+}
+
+.brutal-button:active {
+  transform: translate(0, 0);
+  box-shadow: 2px 2px 0px var(--fg);
+}
+
+/* Neo-Brutalist Input */
+.brutal-input {
+  border: 3px solid var(--fg);
+  padding: 12px 16px;
+  font-family: var(--font-ibm-plex);
+  font-size: 14px;
+  background: white;
+  color: var(--fg);
+}
+
+.brutal-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px var(--accent-yellow);
+  border-color: var(--fg);
+}
+
+/* Scanline Overlay */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.03) 0px,
+    rgba(0, 0, 0, 0.03) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Glitch Text Animation */
+@keyframes glitch {
+  0% {
+    clip-path: inset(0 0 95% 0);
+    transform: translate(-4px, 0);
+  }
+  20% {
+    clip-path: inset(30% 0 50% 0);
+    transform: translate(4px, 0);
+  }
+  40% {
+    clip-path: inset(60% 0 20% 0);
+    transform: translate(-2px, 0);
+  }
+  60% {
+    clip-path: inset(80% 0 5% 0);
+    transform: translate(2px, 0);
+  }
+  80% {
+    clip-path: inset(10% 0 70% 0);
+    transform: translate(-4px, 0);
+  }
+  100% {
+    clip-path: inset(0 0 95% 0);
+    transform: translate(0, 0);
+  }
+}
+
+.glitch-text {
+  animation: glitch 0.8s infinite;
+  font-weight: 900;
+}
+
+/* CRT Flicker Effect */
+@keyframes flicker {
+  0% {
+    opacity: 1;
+  }
+  19% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  24% {
+    opacity: 1;
+  }
+  62% {
+    opacity: 1;
+  }
+  63% {
+    opacity: 0.8;
+  }
+  77% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.crt-flicker {
+  animation: flicker 0.15s infinite;
+}
+
+/* Y2K Star decoration */
+.y2k-star {
+  font-family: var(--font-arial-black);
+  color: var(--accent-yellow);
+  text-shadow: 2px 2px 0px var(--fg);
+  letter-spacing: 2px;
+}
+
+/* Progress Bar - Diagonal Stripes */
+.progress-bar {
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--accent-yellow),
+    var(--accent-yellow) 10px,
+    #e6d000 10px,
+    #e6d000 20px
+  );
+  height: 20px;
+  border: 3px solid var(--fg);
+  box-shadow: 3px 3px 0px var(--fg);
+}
+
+/* Shimmer Loading */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer {
+  background-image: linear-gradient(
+    90deg,
+    var(--bg) 0%,
+    rgba(255, 229, 0, 0.3) 50%,
+    var(--bg) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-space-grotesk);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+
+h2 {
+  font-size: clamp(1.75rem, 4vw, 3rem);
+}
+
+h3 {
+  font-size: clamp(1.25rem, 3vw, 2rem);
+}
+
+.mono {
+  font-family: var(--font-ibm-plex);
+}
+
+/* Reset default form styles */
+button,
+input,
+select,
+textarea {
+  border: none;
+  background: none;
+  font-family: inherit;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+}
+
+/* Utility: Uppercase Labels */
+.label-uppercase {
+  font-family: var(--font-arial-black);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+/* Utility: Border Bottom Thick */
+.border-thick {
+  border-bottom: 3px solid var(--fg);
+  padding-bottom: 8px;
+}
+
+/* Scrollbar Y2K style */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--fg);
+  box-shadow: inset 0 0 0 3px var(--bg);
+  border: 3px solid var(--bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-yellow);
+}
+
+/* ==================== MOBILE OPTIMIZATIONS ==================== */
+
+/* Reduce font sizes on mobile */
+@media (max-width: 640px) {
+  h1 {
+    font-size: 1.875rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  body {
+    font-size: 0.9375rem;
+  }
+
+  /* Touch-friendly spacing */
+  button,
+  a[role="button"],
+  .brutal-button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px 16px;
+  }
+
+  input,
+  textarea,
+  select,
+  .brutal-input {
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: 16px; /* Prevents auto-zoom on iOS */
+  }
+
+  /* Reduce card shadow on mobile for performance */
+  .brutal-card {
+    box-shadow: 4px 4px 0px var(--shadow);
+  }
+
+  .brutal-card:hover {
+    box-shadow: 4px 4px 0px var(--shadow);
+    transform: translate(0, 0);
+  }
+
+  /* Reduce button shadow on mobile */
+  .brutal-button:hover {
+    box-shadow: 2px 2px 0px var(--fg);
+    transform: translate(0, 0);
+  }
+
+  /* Smaller padding for cards */
+  .brutal-card {
+    padding: 12px;
+  }
+
+  /* Margin/padding adjustments */
+  .px-8 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .py-8 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  /* Avoid horizontal scroll */
+  body,
+  html {
+    overflow-x: hidden;
+  }
+
+  /* Mobile-safe viewport */
+  * {
+    tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  h1 {
+    font-size: 2.25rem;
+  }
+
+  h2 {
+    font-size: 1.875rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  .brutal-card {
+    padding: 18px;
+  }
+
+  button,
+  a[role="button"],
+  .brutal-button {
+    min-height: 40px;
+  }
+
+  input,
+  textarea,
+  select,
+  .brutal-input {
+    min-height: 40px;
+  }
+}
+
+/* Dark mode optimizations for battery life on OLED (optional) */
+@media (prefers-color-scheme: dark) {
+  /* Reduce CRT effect intensity in dark mode for less eye strain */
+  body::before {
+    background-image: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.01) 0px,
+      rgba(0, 0, 0, 0.01) 2px,
+      transparent 2px,
+      transparent 4px
+    );
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+  nav {
+    min-height: 40px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  button,
+  input {
+    min-height: 36px;
+  }
+}
+
+/* High DPI screens (Retina) */
+@media (min-resolution: 2dppx) {
+  .brutal-card,
+  .brutal-button,
+  .brutal-input {
+    border-width: 2px;
+  }
+
+  /* Reduce shadow size for retina */
+  .brutal-card {
+    box-shadow: 3px 3px 0px var(--shadow);
+  }
 }
